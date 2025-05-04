@@ -1,4 +1,7 @@
 package com.example.proyecto_final.Repository;
 
-public interface ProveedorRepository {
+import com.example.proyecto_final.Model.Proveedor;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProveedorRepository extends JpaRepository<Proveedor,Integer> {
 }
