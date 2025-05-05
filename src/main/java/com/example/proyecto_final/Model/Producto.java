@@ -12,14 +12,14 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 
-public class Productos {
+public class Producto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "producto_id")
     private Integer productoId;
 
-    @Column(length = 255, nullable = false)
+    @Column(nullable = false)
     private String nombre;
 
     @Column(columnDefinition = "TEXT")
@@ -39,6 +39,7 @@ public class Productos {
     private Integer stock;
 
     @ManyToOne
-    @JoinColumn(name = "proveedor_id", nullable = false)
+    @JoinColumn(name = "proveedor_id")
     private Proveedor proveedor;
+
 }

@@ -10,10 +10,8 @@ public class ProyectoFinalApplication {
 	public static void main(String[] args) {
 		loadEnv();
 		SpringApplication.run(ProyectoFinalApplication.class, args);
-
 }
 public static void loadEnv(){
-
 		Dotenv dotenv =Dotenv.load();
 	System.setProperty("DB_URL", dotenv.get("DB_URL"));
 	System.setProperty("DB_USERNAME", dotenv.get("DB_USERNAME"));

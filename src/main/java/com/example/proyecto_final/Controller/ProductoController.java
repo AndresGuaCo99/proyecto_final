@@ -1,7 +1,7 @@
 package com.example.proyecto_final.Controller;
 
 
-import com.example.proyecto_final.Model.Productos;
+import com.example.proyecto_final.Model.Producto;
 import com.example.proyecto_final.Repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,40 +20,39 @@ public class ProductoController {
 
     // Obtener todos los productos
     @GetMapping
-    public List<Productos> getAllProductos() {
+    public List<Producto> getAllProductos() {
         return productoRepository.findAll();
     }
 
     // Obtener producto por ID
     @GetMapping("/{id}")
-    public ResponseEntity<Productos> getProductoById(@PathVariable Integer id) {
-        Optional<Productos> producto = productoRepository.findById(id);
+    public ResponseEntity<Producto> getProductoById(@PathVariable Integer id) {
+        Optional<Producto> producto = productoRepository.findById(id);
         return producto.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     // Crear nuevo producto
     @PostMapping
-    public Productos createProducto(@RequestBody Productos productos) {
-        return productoRepository.save(productos);
+    public Producto createProducto(@RequestBody Producto producto) {
+        return productoRepository.save(producto);
     }
 
     // Actualizar producto existente
     @PutMapping("/{id}")
-    public ResponseEntity<Productos> updateProducto(@PathVariable Integer id, @RequestBody Productos productoDetails) {
-        Optional<Productos> optionalProducto = productoRepository.findById(id);
+    public ResponseEntity<Producto> updateProducto(@PathVariable Integer id, @RequestBody Producto productoDetails) {
+        Optional<Producto> optionalProducto = productoRepository.findById(id);
 
         if (optionalProducto.isPresent()) {
-            Productos productos = optionalProducto.get();
-            productos.setNombre(productoDetails.getNombre());
-            productos.setDescripcion(productoDetails.getDescripcion());
-            productos.setPrecio(productoDetails.getPrecio());
-            productos.setCategoria(productoDetails.getCategoria());
-            productos.setImagen(productoDetails.getImagen());
-            productos.setStock(productoDetails.getStock());
-            productos.setProveedor(productoDetails.getProveedor());
+            Producto producto = optionalProducto.get();
+            producto.setNombre(productoDetails.getNombre());
+            producto.setDescripcion(productoDetails.getDescripcion());
+            producto.setPrecio(productoDetails.getPrecio());
+            producto.setCategoria(productoDetails.getCategoria());
+            producto.setImagen(productoDetails.getImagen());
+            producto.setStock(productoDetails.getStock());
 
-            return ResponseEntity.ok(productoRepository.save(productos));
+            return ResponseEntity.ok(productoRepository.save(producto));
         } else {
             return ResponseEntity.notFound().build();
         }

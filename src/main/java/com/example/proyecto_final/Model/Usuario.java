@@ -2,6 +2,7 @@ package com.example.proyecto_final.Model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 
-public class Usuarios {
+public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -27,10 +28,11 @@ public class Usuarios {
     @Column(length = 255, nullable = false)
     private String contraseña;
 
-    @Column(length = 15)
+    @Column(length = 10)
     private String telefono;
 
-    @Column(name = "fecha_registro")
+    @CreationTimestamp
+    @Column(name = "fecha_registro", updatable = false)
     private LocalDateTime fechaRegistro;
 
     @Column(columnDefinition = "TEXT")

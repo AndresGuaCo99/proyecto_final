@@ -1,6 +1,6 @@
 package com.example.proyecto_final.Service;
 
-import com.example.proyecto_final.Model.Productos;
+import com.example.proyecto_final.Model.Producto;
 import com.example.proyecto_final.Repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,12 +15,12 @@ public class ProductoService {
     private ProductoRepository productoRepository;
 
     // Obtener todos los productos
-    public List<Productos> getAllProductos() {
+    public List<Producto> getAllProductos() {
         return productoRepository.findAll();
     }
 
     // Obtener un producto por ID
-    public Optional<Productos> getProductoById(Integer id) {
+    public Optional<Producto> getProductoById(Integer id) {
         return productoRepository.findById(id);
     }
 }

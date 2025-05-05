@@ -1,8 +1,8 @@
 package com.example.proyecto_final.Controller;
 
-
 import com.example.proyecto_final.Model.DetallePedido;
 import com.example.proyecto_final.Service.DetallePedidoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,41 +12,56 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/detallePedidos")
-
+@RequestMapping("/api/detalles-pedidos") // Rutas en minúscula y consistentes
 public class DetallePedidoController {
 
-    @Autowired
-    private DetallePedidoService detallePedidoService;
+    private final DetallePedidoService detallePedidoService;
 
-    @GetMapping
+    @Autowired
+    public DetallePedidoController(DetallePedidoService detallePedidoService) {
+        this.detallePedidoService = detallePedidoService;
+    }
+
+    @GetMapping("/ver pedido")
     public ResponseEntity<List<DetallePedido>> getAllDetalles() {
-        return new ResponseEntity<>(detallePedidoService.getAllDetalles(), HttpStatus.OK);
+        List<DetallePedido> detalles = detallePedidoService.getAllDetalles();
+        return new ResponseEntity<>(detalles, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DetallePedido> getDetalleById(@PathVariable Integer id) {
-        Optional<DetallePedido> detalle = detallePedidoService.getDetalleById(id);
-        return detalle.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        return detallePedidoService.getDetalleById(id)
+                .map(detalle -> new ResponseEntity<>(detalle, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/pedido/{pedidoId}")
+    public ResponseEntity<Optional<DetallePedido>> getDetallesByPedido(@PathVariable Integer pedidoId) {
+        Optional<DetallePedido> detalles = detallePedidoService.getDetalleById(pedidoId);
+        return new ResponseEntity<>(detalles, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<DetallePedido> createDetalle(@RequestBody DetallePedido detalle) {
+    public ResponseEntity<DetallePedido> createDetalle(@Valid @RequestBody DetallePedido detalle) {
         DetallePedido nuevoDetalle = detallePedidoService.saveDetalle(detalle);
         return new ResponseEntity<>(nuevoDetalle, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DetallePedido> updateDetalle(@PathVariable Integer id, @RequestBody DetallePedido detalle) {
-        Optional<DetallePedido> existing = detallePedidoService.getDetalleById(id);
-        if (existing.isPresent()) {
-            detalle.setDetalleId(id);
-            DetallePedido actualizado = detallePedidoService.saveDetalle(detalle);
-            return new ResponseEntity<>(actualizado, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<DetallePedido> updateDetalle(
+            @PathVariable Integer id,
+            @Valid @RequestBody DetallePedido detalle) {
+
+        if (!id.equals(detalle.getDetalleId())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
+        return detallePedidoService.getDetalleById(id)
+                .map(existing -> {
+                    DetallePedido actualizado = detallePedidoService.saveDetalle(detalle);
+                    return new ResponseEntity<>(actualizado, HttpStatus.OK);
+                })
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/{id}")
@@ -54,8 +69,7 @@ public class DetallePedidoController {
         if (detallePedidoService.existsById(id)) {
             detallePedidoService.deleteDetalle(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

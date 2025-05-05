@@ -3,6 +3,8 @@ package com.example.proyecto_final.Model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -29,5 +31,7 @@ public class Proveedor {
     @Column(name = "productos_ofrecidos", columnDefinition = "TEXT")
     private String productosOfrecidos;
 
+    @OneToMany(mappedBy = "proveedor")
+    private List<Producto> productos;
 
 }

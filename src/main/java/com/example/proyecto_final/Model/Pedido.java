@@ -21,7 +21,7 @@ public class Pedido {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private Usuarios usuario;
+    private Usuario usuario;
 
     @Column(name = "fecha_pedido")
     private LocalDateTime fechaPedido;

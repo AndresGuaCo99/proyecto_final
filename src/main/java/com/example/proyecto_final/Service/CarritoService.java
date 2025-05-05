@@ -31,7 +31,7 @@ public class CarritoService {
     public Optional<Carrito> updateCarritoItem(Integer id, Carrito carritoDetails) {
         return carritoRepository.findById(id).map(carrito -> {
             carrito.setUsuario(carritoDetails.getUsuario());
-            carrito.setProductos(carritoDetails.getProductos());
+            carrito.setProducto(carritoDetails.getProducto());
             carrito.setCantidad(carritoDetails.getCantidad());
             carrito.setFechaAgregado(LocalDateTime.now());
             return carritoRepository.save(carrito);

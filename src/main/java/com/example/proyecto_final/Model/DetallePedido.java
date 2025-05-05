@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Getter
 @Setter
-
+@Table(name = "detalle_pedido")
 public class DetallePedido {
 
     @Id
@@ -25,7 +25,7 @@ public class DetallePedido {
 
     @ManyToOne
     @JoinColumn(name = "producto_id", nullable = false)
-    private Productos productos;
+    private Producto producto;
 
     @Column(nullable = false)
     private Integer cantidad;

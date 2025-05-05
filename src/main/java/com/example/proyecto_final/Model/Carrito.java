@@ -20,11 +20,11 @@ public class Carrito {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private Usuarios usuario;
+    private Usuario usuario;
 
     @ManyToOne
     @JoinColumn(name = "producto_id", nullable = false)
-    private Productos productos;
+    private Producto producto;
 
     @Column(nullable = false)
     private Integer cantidad;
