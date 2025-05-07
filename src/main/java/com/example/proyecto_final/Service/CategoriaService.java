@@ -1,6 +1,5 @@
 package com.example.proyecto_final.Service;
 
-
 import com.example.proyecto_final.Model.Categoria;
 import com.example.proyecto_final.Repository.CategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
