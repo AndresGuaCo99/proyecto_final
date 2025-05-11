@@ -1,5 +1,6 @@
 package com.example.proyecto_final.Model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,6 +33,7 @@ public class Proveedor {
     private String productosOfrecidos;
 
     @OneToMany(mappedBy = "proveedor")
+    @JsonManagedReference
     private List<Producto> productos;
 
 }

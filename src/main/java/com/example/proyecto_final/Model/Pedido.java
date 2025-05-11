@@ -17,7 +17,6 @@ public class Pedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "pedido_id")
     private Integer pedidoId;
 
     @ManyToOne
@@ -28,15 +27,11 @@ public class Pedido {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private LocalDateTime fechaPedido;
 
-    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal total;
 
-    @Column(length = 50, nullable = false)
     private String estado;
 
-    @Column(columnDefinition = "TEXT")
     private String direccionEnvio;
 
-    @Column(name = "metodo_pago", length = 50)
     private String metodoPago;
 }

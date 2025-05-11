@@ -1,8 +1,11 @@
 package com.example.proyecto_final.Controller;
 
-
+import com.example.proyecto_final.Dto.ProductoDTO;
+import com.example.proyecto_final.Model.Categoria;
 import com.example.proyecto_final.Model.Producto;
+import com.example.proyecto_final.Repository.CategoriaRepository;
 import com.example.proyecto_final.Repository.ProductoRepository;
+import com.example.proyecto_final.Repository.ProveedorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +15,17 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/productos")
-@CrossOrigin(origins = "*") // Permitir solicitudes desde otros dominios
+@CrossOrigin(origins = "*")
 public class ProductoController {
 
     @Autowired
     private ProductoRepository productoRepository;
+
+    @Autowired
+    private CategoriaRepository categoriaRepository;
+
+    @Autowired
+    private ProveedorRepository proveedorRepository;
 
     // Obtener todos los productos
     @GetMapping
@@ -27,37 +36,51 @@ public class ProductoController {
     // Obtener producto por ID
     @GetMapping("/{id}")
     public ResponseEntity<Producto> getProductoById(@PathVariable Integer id) {
-        Optional<Producto> producto = productoRepository.findById(id);
-        return producto.map(ResponseEntity::ok)
+        return productoRepository.findById(id)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Crear nuevo producto
+    // Crear nuevo producto usando DTO
     @PostMapping
-    public Producto createProducto(@RequestBody Producto producto) {
-        return productoRepository.save(producto);
+    public ResponseEntity<Producto> createProducto(@RequestBody ProductoDTO dto) {
+        Optional<Categoria> categoriaOpt = categoriaRepository.findById(dto.getCategoriaId());
+        if (categoriaOpt.isEmpty()) {
+            return ResponseEntity.badRequest().build(); // Categoría inválida
+        }
+
+        Producto producto = new Producto();
+        producto.setNombre(dto.getNombre());
+        producto.setDescripcion(dto.getDescripcion());
+        producto.setPrecio(dto.getPrecio());
+        producto.setCategoria(categoriaOpt.get());
+        producto.setImagen(dto.getImagen());
+        producto.setStock(dto.getStock());
+        //producto.setProveedor(dto.getProveedor());
+
+        return ResponseEntity.ok(productoRepository.save(producto));
     }
 
-    // Actualizar producto existente
+    // Actualizar producto
     @PutMapping("/{id}")
-    public ResponseEntity<Producto> updateProducto(@PathVariable Integer id, @RequestBody Producto productoDetails) {
+    public ResponseEntity<Producto> updateProducto(@PathVariable Integer id, @RequestBody ProductoDTO dto) {
         Optional<Producto> optionalProducto = productoRepository.findById(id);
+        Optional<Categoria> categoriaOpt = categoriaRepository.findById(dto.getCategoriaId());
 
-        if (optionalProducto.isPresent()) {
+        if (optionalProducto.isPresent() && categoriaOpt.isPresent()) {
             Producto producto = optionalProducto.get();
-            producto.setNombre(productoDetails.getNombre());
-            producto.setDescripcion(productoDetails.getDescripcion());
-            producto.setPrecio(productoDetails.getPrecio());
-            producto.setCategoria(productoDetails.getCategoria());
-            producto.setImagen(productoDetails.getImagen());
-            producto.setStock(productoDetails.getStock());
+            producto.setNombre(dto.getNombre());
+            producto.setDescripcion(dto.getDescripcion());
+            producto.setPrecio(dto.getPrecio());
+            producto.setCategoria(categoriaOpt.get());
+            producto.setImagen(dto.getImagen());
+            producto.setStock(dto.getStock());
 
             return ResponseEntity.ok(productoRepository.save(producto));
         } else {
             return ResponseEntity.notFound().build();
         }
     }
-
     // Eliminar producto
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProducto(@PathVariable Integer id) {
