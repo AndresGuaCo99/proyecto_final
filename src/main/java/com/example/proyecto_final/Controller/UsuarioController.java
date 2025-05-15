@@ -66,7 +66,5 @@ public class UsuarioController {
         }
         usuarioService.eliminarUsuario(id);
         return ResponseEntity.noContent().build();
-
-
     }
     }

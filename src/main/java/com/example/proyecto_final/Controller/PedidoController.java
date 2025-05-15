@@ -1,5 +1,6 @@
 package com.example.proyecto_final.Controller;
 
+import com.example.proyecto_final.Dto.PedidoDTO;
 import com.example.proyecto_final.Model.Pedido;
 import com.example.proyecto_final.Service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,10 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/pedidos")
-@CrossOrigin(origins = "*" +
-        "")
+@CrossOrigin(origins = "*")
 public class PedidoController {
 
-    private final PedidoService pedidoService;
+    private PedidoService pedidoService;
 
     @Autowired
     public PedidoController(PedidoService pedidoService) {
@@ -37,9 +37,13 @@ public class PedidoController {
     }
 
     @PostMapping
-    public ResponseEntity<Pedido> createPedido(@RequestBody Pedido pedido) {
-        Pedido savedPedido = pedidoService.savePedido(pedido);
-        return new ResponseEntity<>(savedPedido, HttpStatus.CREATED);
+    public ResponseEntity<Pedido> createPedido(@RequestBody PedidoDTO pedidoDTO) {
+        try {
+            Pedido savedPedido = pedidoService.createPedido(pedidoDTO);
+            return new ResponseEntity<>(savedPedido, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 
